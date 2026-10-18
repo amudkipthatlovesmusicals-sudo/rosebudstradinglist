@@ -1,0 +1,2 @@
+# rosebudstradinglist
+idk
