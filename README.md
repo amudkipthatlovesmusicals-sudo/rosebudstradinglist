@@ -1,2 +1,2 @@
 # rosebudstradinglist
-idk
+jujuju
