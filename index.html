@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available for Trade</title>
+    <style>
+        /* Paleta de colores oscuros inspirada en la imagen */
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #21262d;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-green: #2ea44f;
+            --accent-blue: #1f6feb;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h2 {
+            margin: 0 0 10px 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .counter {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+
+        /* Contenedor principal de dos columnas */
+        .layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .table-container {
+            flex: 3;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        /* Estilos de la Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #161b22;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background-color: #1f242c;
+        }
+
+        /* Checkbox personalizado */
+        .checkbox-cell {
+            width: 50px;
+            text-align: center;
+        }
+
+        .id-cell {
+            color: #48bb78;
+            font-weight: bold;
+            width: 60px;
+        }
+
+        /* Badge azul 'Trade only' */
+        .badge-trade {
+            background-color: #388bfd1a;
+            color: #58a6ff;
+            border: 1px solid #388bfd66;
+            padding: 2px 6px;
+            border-radius: 2em;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        /* Panel Lateral del Carrito */
+        .cart-panel {
+            flex: 1;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .cart-panel h3 {
+            margin-top: 0;
+            font-size: 16px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        #cart-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #cart-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #21262d66;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .empty-text {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        /* Botón de Acción */
+        .btn-copy {
+            background-color: var(--accent-green);
+            color: white;
+            border: 1px solid rgba(240,246,252,0.1);
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-copy:hover {
+            background-color: #2c974b;
+        }
+
+        .btn-copy:disabled {
+            background-color: #21262d;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* Adaptabilidad móvil básica */
+        @media (max-width: 768px) {
+            .layout { flex-direction: column; }
+            .cart-panel { width: 100%; box-sizing: border-box; position: static; }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Available for Trade <span class="counter">3 recordings</span></h2>
+
+    <div class="layout">
+        <!-- SECCIÓN DE LA TABLA -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="checkbox-cell">Select</th>
+                        <th>ID</th>
+                        <th>Show</th>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Master</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Fila 1 -->
+                    <tr data-id="64" data-show="Falsettos" data-master="pro-shot">
+                        <td class="checkbox-cell"><input type="checkbox" class="row-select"></td>
+                        <td class="id-cell">64</td>
+                        <td>Falsettos <span class="badge-trade">Trade only</span></td>
+                        <td>2017-01-01</td>
+                        <td>Walter Kerr Theatre</td>
+                        <td>pro-shot</td>
+                    </tr>
+                    <!-- Fila 2 -->
+                    <tr data-id="65" data-show="Heathers: The Musical" data-master="SJ Bernly">
+                        <td class="checkbox-cell"><input type="checkbox" class="row-select"></td>
+                        <td class="id-cell">65</td>
+                        <td>Heathers: The Musical</td>
+                        <td>2014-05-25</td>
+                        <td>New World Stages - Stage 1</td>
+                        <td>SJ Bernly</td>
+                    </tr>
+                    <!-- Fila 3 -->
+                    <tr data-id="67" data-show="Newsies" data-master="pro-shot">
+                        <td class="checkbox-cell"><input type="checkbox" class="row-select"></td>
+                        <td class="id-cell">67</td>
+                        <td>Newsies</td>
+                        <td>2016-09-11</td>
+                        <td>Pantages Theatre</td>
+                        <td>pro-shot</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECCIÓN DEL CARRITO -->
+        <div class="cart-panel">
+            <h3>Lista Seleccionada</h3>
+            <ul id="cart-list">
+                <li class="empty-text" id="empty-msg">No has seleccionado ningún show.</li>
+            </ul>
+            <button id="copy-btn" class="btn-copy" disabled>Copiar Lista para Trade</button>
+        </div>
+    </div>
+
+    <!-- LOGICA DE CONTROL DE LA TABLA -->
+    <script>
+        const checkboxes = document.querySelectorAll('.row-select');
+        const cartList = document.getElementById('cart-list');
+        const emptyMsg = document.getElementById('empty-msg');
+        const copyBtn = document.getElementById('copy-btn');
+
+        // Estructura de datos interna (Lista vacía al inicio)
+        let selectedItems = {};
+
+        // Escuchar clics en los checkboxes
+        checkboxes.forEach(box => {
+            box.addEventListener('change', function() {
+                const row = this.closest('tr');
+                const id = row.getAttribute('data-id');
+                const show = row.getAttribute('data-show');
+                const master = row.getAttribute('data-master');
+
+                if (this.checked) {
+                    // Guardamos un sub-objeto con los datos necesarios
+                    selectedItems[id] = { show: show, master: master };
+                } else {
+                    delete selectedItems[id];
+                }
+
+                renderCart();
+            });
+        });
+
+        // Dibujar el carrito basado en lo seleccionado
+        function renderCart() {
+            cartList.innerHTML = '';
+            const keys = Object.keys(selectedItems);
+
+            if (keys.length === 0) {
+                cartList.appendChild(emptyMsg);
+                copyBtn.disabled = true;
+                return;
+            }
+
+            copyBtn.disabled = false;
+
+            keys.forEach(id => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span><strong>#${id}</strong> ${selectedItems[id].show}</span> <small style="color:var(--text-muted)">(${selectedItems[id].master})</small>`;
+                cartList.appendChild(li);
+            });
+        }
+
+        // Acción del botón para copiar al portapapeles
+        copyBtn.addEventListener('click', () => {
+            let textToCopy = "Hola! Me interesan estos shows de tu lista:\n\n";
+            
+            Object.keys(selectedItems).forEach(id => {
+                textToCopy += `• [#${id}] ${selectedItems[id].show} (${selectedItems[id].master})\n`;
+            });
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = copyBtn.innerText;
+                copyBtn.innerText = "¡Copiado con éxito! ✓";
+                copyBtn.style.backgroundColor = "#238636";
+                
+                setTimeout(() => {
+                    copyBtn.innerText = originalText;
+                    copyBtn.style.backgroundColor = "var(--accent-green)";
+                }, 2000);
+            }).catch(err => {
+                alert("Error al copiar texto: ", err);
+            });
+        });
+    </script>
+</body>
+</html>
