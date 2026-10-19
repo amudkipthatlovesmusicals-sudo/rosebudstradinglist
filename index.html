@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosebuds' trading list</title>
+    <style>
+        /* Paleta de colores oscuros inspirada en la imagen */
+        :root {
+            --bg-color: #B09BC2;
+            --card-bg: #A171C9;
+            --border-color: #74588C;
+            --text-main: #FAFAFA;
+            --text-muted: #FAFAFA;
+            --accent-green: #2ea44f;
+            --accent-blue: #1f6feb;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h2 {
+            margin: 0 0 10px 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .counter {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+
+        /* Contenedor principal de dos columnas */
+        .layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        /* Tabla ocupa el 65% del espacio */
+        .table-container {
+            flex: 65; 
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        /* MODIFICADO: El carrito ahora es más ancho (ocupa el 35% del total) */
+        .cart-panel {
+            flex: 20; 
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Estilos de la Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #161b22;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background-color: #1f242c;
+        }
+
+        .checkbox-cell {
+            width: 50px;
+            text-align: center;
+        }
+
+        /* Badge azul 'Trade only' */
+        .badge-trade {
+            background-color: #CEB9F0;
+            color: #6732B8;
+            border: 1px solid #6732B8;
+            padding: 2px 6px;
+            border-radius: 2em;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .cart-panel h3 {
+            margin-top: 0;
+            font-size: 16px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        #cart-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #cart-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #21262d66;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .empty-text {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 13px;
+        }
+
+        /* Estilos para el Formulario de Contacto en el Carrito */
+        .user-info-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .form-group input {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: white;
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .btn-copy {
+            background-color: var(--accent-green);
+            color: white;
+            border: 1px solid rgba(240,246,252,0.1);
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-copy:hover {
+            background-color: #2c974b;
+        }
+
+        .btn-copy:disabled {
+            background-color: #21262d;
+            color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .layout { flex-direction: column; }
+            .cart-panel { width: 100%; box-sizing: border-box; position: static; }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Available for Trade <span class="counter">3 recordings</span></h2>
+
+    <div class="layout">
+        <!-- SECCIÓN DE LA TABLA -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="checkbox-cell">Select</th>
+                        <th>Show</th>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Master</th>
+                        <th>Cast</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-id="1" data-show="A night with janis joplin" data-master="Coasterdude">
+                        <td class="checkbox-cell"><input type="checkbox" class="row-select"></td>
+                        <td>A night with janis joplin<span class="badge-trade">Trade only</span></td>
+                        <td>2024</td>
+                        <td>London's Peacock Theatre</td>
+                        <td>Coasterdude</td>
+                        <td>Mary Bridget Davies (Janis Joplin)...</td>
+                    </tr>
+                    <tr data-id="2" data-show="Heathers: The Musical" data-master="SJ Bernly">
+                        <td class="checkbox-cell"><input type="checkbox" class="row-select"></td>
+                        <td>Heathers: The Musical</td>
+                        <td>2014-05-25</td>
+                        <td>New World Stages - Stage 1</td>
+                        <td>SJ Bernly</td>
+                        <td>-</td>
+                    </tr>
+                    <tr data-id="3" data-show="Newsies" data-master="pro-shot">
+                        <td class="checkbox-cell"><input type="checkbox" class="row-select"></td>
+                        <td>Newsies</td>
+                        <td>2016-09-11</td>
+                        <td>Pantages Theatre</td>
+                        <td>pro-shot</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECCIÓN DEL CARRITO (MÁS ANCHO) -->
+        <div class="cart-panel">
+            <h3>Lista Seleccionada</h3>
+            <ul id="cart-list">
+                <li class="empty-text" id="empty-msg">No has seleccionado ningún show.</li>
+            </ul>
+
+            <!-- CAMPOS REQUERIDOS ANTES DE ENVIAR -->
+            <div class="user-info-form">
+                <div class="form-group">
+                    <label for="trader-name">Trader Name *</label>
+                    <input type="text" id="trader-name" placeholder="Tu nombre o nick" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-info">Contacto (Correo / Reddit / Discord) *</label>
+                    <input type="text" id="contact-info" placeholder="Ej: @discord_user" required>
+                </div>
+            </div>
+
+            <button id="copy-btn" class="btn-copy" disabled>Send Trade Request</button>
+        </div>
+    </div>
+
+    <script>
+        const checkboxes = Array.from(document.querySelectorAll('.row-select'));
+        const cartList = document.getElementById('cart-list');
+        const emptyMsg = document.getElementById('empty-msg');
+        const copyBtn = document.getElementById('copy-btn');
+        const traderNameInput = document.getElementById('trader-name');
+        const contactInfoInput = document.getElementById('contact-info');
+
+        let selectedItems = {};
+        let lastChecked = null; // Para rastrear la selección con Shift
+
+        // Escuchar clics en los checkboxes con soporte para SHIFT (Selección Múltiple)
+        checkboxes.forEach((box, index) => {
+            box.addEventListener('click', function(e) {
+                // Si mantiene presionada la tecla Shift y hay un checkbox seleccionado previamente
+                if (e.shiftKey && lastChecked !== null) {
+                    let start = Math.min(checkboxes.indexOf(lastChecked), index);
+                    let end = Math.max(checkboxes.indexOf(lastChecked), index);
+
+                    // Forzar el estado del checkbox actual a todos los del rango
+                    for (let i = start; i <= end; i++) {
+                        checkboxes[i].checked = this.checked;
+                        toggleItemData(checkboxes[i]);
+                    }
+                }
+                else {
+                  toggleItemData(this);
+                }
+                lastChecked = this;
+                updateCartUI();
+            });
+        });
+        // Procesa la inserción o borrado de un elemento en el objeto global
+        function toggleItemData(checkbox) {
+          const row = checkbox.closest('tr');
+          const id = row.getAttribute('data-id');
+          const show = row.getAttribute('data-show');
+          const master = row.getAttribute('data-master');
+          if (checkbox.checked) {
+            selectedItems[id] = { show: show, master: master };
+          } else {
+            delete selectedItems[id];
+          }
+        }
+        function updateCartUI() {
+          cartList.innerHTML = '';
+          const totalKeys = Object.keys(selectedItems);
+          if (totalKeys.length === 0) {
+            cartList.appendChild(emptyMsg);
+    copyBtn.disabled = true;
+} else {
+totalKeys.forEach(id => {
+const li = document.createElement('li');
+li.textContent = ${selectedItems[id].show} (${selectedItems[id].master});
+cartList.appendChild(li);
+});
+copyBtn.disabled = false;
+}
+}
+// MODIFICADO: Acción del botón envía correo automáticamente
+copyBtn.addEventListener('click', () => {
+const trader = traderNameInput.value.trim();
+const contacto = contactInfoInput.value.trim();
+// Validación: Si faltan datos, avisar al usuario
+if (!trader || !contacto) {
+alert("Por favor, rellena tu Trader Name y tu Información de Contacto antes de enviar.");
+return;
+}
+// Cambiar aquí por tu correo electrónico real
+const tuCorreo = "tu_correo@ejemplo.com";
+const asunto = encodeURIComponent(Trade Request de ${trader});
+// Construir el cuerpo del mensaje
+let cuerpoMensaje = Hola!\n\nMe interesan los siguientes shows de tu lista:\n;
+Object.keys(selectedItems).forEach(id => {
+cuerpoMensaje += • [#${id}] ${selectedItems[id].show} (${selectedItems[id].master})\n;
+});
+cuerpoMensaje += \nMis datos de contacto:\n;
+cuerpoMensaje += - Trader Name: ${trader}\n;
+cuerpoMensaje += - Info de contacto: ${contacto}\n;
+const cuerpoUrl = encodeURIComponent(cuerpoMensaje);
+// Abre de forma automática el correo con los datos rellenados
+window.location.href = mailto:${tuCorreo}?subject=${asunto}&body=${cuerpoUrl};
+});
