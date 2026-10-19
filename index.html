@@ -322,43 +322,47 @@
           } else {
             delete selectedItems[id];
           }
-        }
         function updateCartUI() {
-          cartList.innerHTML = '';
-          const totalKeys = Object.keys(selectedItems);
-          if (totalKeys.length === 0) {
-            cartList.appendChild(emptyMsg);
-    copyBtn.disabled = true;
-} else {
-totalKeys.forEach(id => {
-const li = document.createElement('li');
-li.textContent = ${selectedItems[id].show} (${selectedItems[id].master});
-cartList.appendChild(li);
-});
-copyBtn.disabled = false;
-}
-}
-// MODIFICADO: Acción del botón envía correo automáticamente
-copyBtn.addEventListener('click', () => {
-const trader = traderNameInput.value.trim();
-const contacto = contactInfoInput.value.trim();
-// Validación: Si faltan datos, avisar al usuario
-if (!trader || !contacto) {
-alert("Por favor, rellena tu Trader Name y tu Información de Contacto antes de enviar.");
-return;
-}
-// Cambiar aquí por tu correo electrónico real
-const tuCorreo = "tu_correo@ejemplo.com";
-const asunto = encodeURIComponent(Trade Request de ${trader});
-// Construir el cuerpo del mensaje
-let cuerpoMensaje = Hola!\n\nMe interesan los siguientes shows de tu lista:\n;
-Object.keys(selectedItems).forEach(id => {
-cuerpoMensaje += • [#${id}] ${selectedItems[id].show} (${selectedItems[id].master})\n;
-});
-cuerpoMensaje += \nMis datos de contacto:\n;
-cuerpoMensaje += - Trader Name: ${trader}\n;
-cuerpoMensaje += - Info de contacto: ${contacto}\n;
-const cuerpoUrl = encodeURIComponent(cuerpoMensaje);
-// Abre de forma automática el correo con los datos rellenados
-window.location.href = mailto:${tuCorreo}?subject=${asunto}&body=${cuerpoUrl};
-});
+            cartList.innerHTML = '';
+            const totalKeys = Object.keys(selectedItems);
+            if (totalKeys.length === 0) {
+                cartList.appendChild(emptyMsg);
+                copyBtn.disabled = true;
+            } else {
+                totalKeys.forEach(id => {
+                const li = document.createElement('li');
+                 // CORREGIDO: Se cambiaron las comillas por backticks (`)
+                li.textContent = `\({selectedItems[id].show} (\){selectedItems[id].master})`;
+                cartList.appendChild(li);
+                });
+                copyBtn.disabled = false;
+              }
+        }
+
+        // Acción del botón envía correo automáticamente
+        copyBtn.addEventListener('click', () => {
+            const trader = traderNameInput.value.trim();
+            const contacto = contactInfoInput.value.trim();
+            // Validación: Si faltan datos, avisar al usuario
+            if (!trader || !contacto) {
+                alert("Por favor, rellena tu Trader Name y tu Información de Contacto antes de enviar.");
+                return;
+            }
+            // CONFIGURACIÓN: Cambiar aquí por tu correo electrónico real
+            const tuCorreo = "tu_correo@ejemplo.com"; 
+            // CORREGIDO: Se cambiaron las comillas por backticks (`)
+            const asunto = encodeURIComponent(`Trade Request de ${trader}`);
+            // Construir el cuerpo del mensaje
+            // CORREGIDO: Se cambiaron las comillas por backticks (`)
+            let cuerpoMensaje = `Hola!\n\nMe interesan los siguientes shows de tu lista:\n`;
+            Object.keys(selectedItems).forEach(id => {
+                cuerpoMensaje += `• [#\${id}] \({selectedItems[id].show} (\){selectedItems[id].master})\n`;
+            });
+            cuerpoMensaje += `\nMis datos de contacto:\n`;
+            cuerpoMensaje += `- Trader Name: \${trader}\n`;
+            cuerpoMensaje += `- Info de contacto: \${contacto}\n`;
+            const cuerpoUrl = encodeURIComponent(cuerpoMensaje);
+            // Abre de forma automática el gestor de correo (Outlook, Thunderbird, Mail, etc.)
+            // CORREGIDO: Se cambiaron las comillas por backticks (`)
+            window.location.href = `mailto:${tuCorreo}?subject=${asunto}&body=${cuerpoUrl}`;
+        });
