@@ -313,15 +313,17 @@
         });
         // Procesa la inserción o borrado de un elemento en el objeto global
         function toggleItemData(checkbox) {
-          const row = checkbox.closest('tr');
-          const id = row.getAttribute('data-id');
-          const show = row.getAttribute('data-show');
-          const master = row.getAttribute('data-master');
-          if (checkbox.checked) {
-            selectedItems[id] = { show: show, master: master };
-          } else {
-            delete selectedItems[id];
-          }
+            const row = checkbox.closest('tr');
+            const id = row.getAttribute('data-id');
+            const show = row.getAttribute('data-show');
+            const master = row.getAttribute('data-master');
+    
+            if (checkbox.checked) {
+                selectedItems[id] = { show: show, master: master }; // <--- Lo guarda si lo marcas
+            } else {
+                delete selectedItems[id]; // <--- Lo borra si lo desmarcas
+            }
+        }
         function updateCartUI() {
             cartList.innerHTML = '';
             const totalKeys = Object.keys(selectedItems);
